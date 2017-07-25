@@ -54,14 +54,12 @@ function quiz(file) {
 };
 
 function remove(file) {
-    // process.stdout.write('\033c');
     fs.readFile("./" + file, 'utf8', function(error, data) {
         var dataArr = data.split("\n");
         var arrayLength = dataArr.length;
 
         if (error) {
             return console.log(error);
-            // check and handle err
         } else {
             var qNum = 1;
             for (var i = 0; i < arrayLength; i += 2) {
@@ -74,28 +72,26 @@ function remove(file) {
                     message: "Which question do you want to delete?",
                     name: "deleter"
                 }]).then(function(inquirerResponse) {
-                    fs.readFile(file, 'utf8', function(err, data)
-{
-    if (error)
-    {
-        return console.log(error);
-    }
-    var deleterQ = (inquirerResponse.deleter*2)-2;
-    var dataArr = data.split("\n");
-    dataArr.splice(deleterQ,2);
-    // var updateQ = dataArr.slice(dataArr[deleterQ]).join('\n');
-    if(deleterQ <= dataArr.length && inquirerResponse.deleter != 0){
-        process.stdout.write('\033c');
-        console.log("**question deleted**");
-            dataArr = dataArr.toString();
-    dataArr = dataArr.replace(/,/g, "\n");
-    fs.writeFile(file, dataArr);
-        toDo();
-    } else {process.stdout.write('\033c');
-    console.log("**question not found**");
-            toDo()}
-}
-);
+                    fs.readFile(file, 'utf8', function(err, data) {
+                        if (error) {
+                            return console.log(error);
+                        }
+                        var deleterQ = (inquirerResponse.deleter * 2) - 2;
+                        var dataArr = data.split("\n");
+                        dataArr.splice(deleterQ, 2);
+                        if (deleterQ <= dataArr.length && inquirerResponse.deleter != 0) {
+                            process.stdout.write('\033c');
+                            console.log("**question deleted**");
+                            dataArr = dataArr.toString();
+                            dataArr = dataArr.replace(/,/g, "\n");
+                            fs.writeFile(file, dataArr);
+                            toDo();
+                        } else {
+                            process.stdout.write('\033c');
+                            console.log("**question not found**");
+                            toDo()
+                        }
+                    });
 
                 })
 
@@ -127,14 +123,16 @@ function toDo() {
                         message: "What is your answer?",
                         name: "answerBasic"
                     }]).then(function(inquirerResponse) {
-                        if(inquirerResponse.questionBasic != "" && inquirerResponse.answerBasic != ""){
-                         var q1 = new basicCard(inquirerResponse.questionBasic, inquirerResponse.answerBasic);
-                        q1.push();
-                        console.log("**saved**")
-                        toDo();
-                    } else{console.log("**not valid entry**");
-                    toDo();}
-                });
+                        if (inquirerResponse.questionBasic != "" && inquirerResponse.answerBasic != "") {
+                            var q1 = new basicCard(inquirerResponse.questionBasic, inquirerResponse.answerBasic);
+                            q1.push();
+                            console.log("**saved**")
+                            toDo();
+                        } else {
+                            console.log("**not valid entry**");
+                            toDo();
+                        }
+                    });
 
             } else if (inquirerResponse.option == "Make a new cloze card") {
                 process.stdout.write('\033c');
@@ -148,14 +146,16 @@ function toDo() {
                         message: "What are we leaving out of your statement?",
                         name: "answerCloze"
                     }]).then(function(inquirerResponse) {
-                        if(inquirerResponse.questionCloze != "" && inquirerResponse.answerCloze != ""){
-                        var q1 = new clozeCard(inquirerResponse.questionCloze, inquirerResponse.answerCloze);
-                        q1.push();
-                        console.log("**saved**")
-                        toDo();
-                    }else{console.log("**not valid entry**");
-                    toDo();}
-                });
+                        if (inquirerResponse.questionCloze != "" && inquirerResponse.answerCloze != "") {
+                            var q1 = new clozeCard(inquirerResponse.questionCloze, inquirerResponse.answerCloze);
+                            q1.push();
+                            console.log("**saved**")
+                            toDo();
+                        } else {
+                            console.log("**not valid entry**");
+                            toDo();
+                        }
+                    });
             } else if (inquirerResponse.option == "Quiz me on the basic cards") {
                 quiz("logBasic.txt");
 
